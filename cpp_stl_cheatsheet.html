@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>C++ STL Complete Cheatsheet</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Bebas+Neue&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #f5f0e8;
+  --paper: #fdfaf4;
+  --ink: #1a1208;
+  --muted: #7a6a50;
+  --border: #d4c9b0;
+  --accent: #c0392b;
+  --accent2: #2980b9;
+  --accent3: #27ae60;
+  --accent4: #8e44ad;
+  --accent5: #e67e22;
+  --code-bg: #1a1208;
+  --code-text: #f8f0dc;
+  --highlight: #fff3cd;
+  --tag-bg: #e8e0d0;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* HEADER */
+.site-header {
+  background: var(--ink);
+  color: var(--bg);
+  padding: 2rem 2rem 1.5rem;
+  position: sticky; top: 0; z-index: 200;
+  border-bottom: 4px solid var(--accent);
+}
+.header-row { display: flex; align-items: baseline; gap: 1.5rem; flex-wrap: wrap; }
+.site-title {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 2.2rem; letter-spacing: 3px;
+  color: #fff;
+}
+.site-title span { color: var(--accent); }
+.subtitle { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; color: #888; letter-spacing: 1px; }
+
+/* NAV TABS */
+.nav-tabs {
+  display: flex; gap: 0.3rem; flex-wrap: wrap; margin-top: 1rem;
+  overflow-x: auto; padding-bottom: 2px;
+}
+.nav-tab {
+  padding: 0.3rem 0.9rem;
+  border: 1px solid #444;
+  background: transparent;
+  color: #aaa;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase;
+  cursor: pointer; border-radius: 3px;
+  transition: all 0.15s; white-space: nowrap;
+}
+.nav-tab:hover { border-color: #888; color: #fff; }
+.nav-tab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+/* SEARCH */
+.search-wrap { margin-top: 0.75rem; }
+.search-input {
+  width: 100%; max-width: 400px;
+  padding: 0.4rem 1rem;
+  background: #2a2010; border: 1px solid #444;
+  color: #fff; border-radius: 4px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem;
+  outline: none;
+}
+.search-input:focus { border-color: var(--accent); }
+.search-input::placeholder { color: #666; }
+
+/* MAIN */
+main { max-width: 1000px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+/* SECTION */
+.stl-section { display: none; }
+.stl-section.visible { display: block; }
+
+.section-heading {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 2rem; letter-spacing: 2px;
+  color: var(--ink); margin-bottom: 0.25rem;
+}
+.section-desc {
+  font-size: 0.82rem; color: var(--muted);
+  font-family: 'IBM Plex Mono', monospace;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--border);
+}
+
+/* HEADER ROW: name + header file */
+.container-block {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+  box-shadow: 2px 2px 0 var(--border);
+}
+.container-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.75rem 1.2rem;
+  background: var(--ink); color: #fff;
+  flex-wrap: wrap; gap: 0.5rem;
+}
+.container-name {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 1.1rem; font-weight: 700; color: #ffd700;
+}
+.header-file {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem; color: #aaffaa;
+  background: #2a2a1a; padding: 0.2rem 0.6rem; border-radius: 3px;
+}
+.container-tagline {
+  font-size: 0.78rem; color: #ccc;
+  font-style: italic; width: 100%;
+}
+
+.container-body { padding: 1rem 1.2rem; }
+
+/* USE CASE BOX */
+.use-case-row {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 0.75rem; margin-bottom: 1rem;
+}
+@media(max-width:600px){ .use-case-row { grid-template-columns: 1fr; } }
+
+.info-box {
+  background: var(--tag-bg);
+  border-radius: 6px; padding: 0.6rem 0.9rem;
+  border-left: 3px solid var(--border);
+}
+.info-box.when { border-left-color: var(--accent2); }
+.info-box.trap { border-left-color: var(--accent); background: #fde8e8; }
+.info-box .label {
+  font-size: 0.6rem; letter-spacing: 2px; font-weight: 700;
+  font-family: 'IBM Plex Mono', monospace;
+  color: var(--muted); margin-bottom: 0.25rem; text-transform: uppercase;
+}
+.info-box .label.red { color: var(--accent); }
+.info-box .label.blue { color: var(--accent2); }
+.info-box p { font-size: 0.8rem; line-height: 1.5; }
+
+/* METHODS TABLE */
+.methods-label {
+  font-size: 0.65rem; letter-spacing: 2px; font-weight: 700;
+  font-family: 'IBM Plex Mono', monospace;
+  color: var(--muted); text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+.methods-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 0.4rem; margin-bottom: 1rem;
+}
+.method-row {
+  display: flex; align-items: baseline; gap: 0.5rem;
+  background: #f0ebe0; border-radius: 4px;
+  padding: 0.35rem 0.6rem;
+  border: 1px solid var(--border);
+}
+.method-name {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem; font-weight: 700; color: var(--accent);
+  white-space: nowrap; min-width: 120px;
+}
+.method-desc { font-size: 0.75rem; color: var(--ink); line-height: 1.4; }
+.method-note {
+  font-size: 0.65rem; color: var(--accent3); font-weight: 700;
+  margin-left: auto; white-space: nowrap;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+/* CODE BLOCK */
+.code-block {
+  background: var(--code-bg);
+  color: var(--code-text);
+  border-radius: 6px; padding: 1rem 1.2rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem; line-height: 1.8;
+  overflow-x: auto; margin-top: 0.75rem;
+  border: 1px solid #3a3020;
+}
+.code-block .cm { color: #888; font-style: italic; }
+.code-block .kw { color: #ff9f43; }
+.code-block .ty { color: #ffd700; }
+.code-block .fn { color: #00cec9; }
+.code-block .st { color: #a29bfe; }
+.code-block .nu { color: #55efc4; }
+.code-block .op { color: #fd79a8; }
+.code-block .out { color: #74b9ff; }
+
+/* COMPLEXITY ROW */
+.complexity-row {
+  display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.75rem;
+}
+.complexity-tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem; font-weight: 700;
+  padding: 0.2rem 0.6rem; border-radius: 3px;
+}
+.O1 { background: #d5f5e3; color: #1e8449; border: 1px solid #82e0aa; }
+.Ologn { background: #d6eaf8; color: #1a5276; border: 1px solid #85c1e9; }
+.On { background: #fef9e7; color: #9a7d0a; border: 1px solid #f7dc6f; }
+.Onlogn { background: #fdf2e9; color: #a04000; border: 1px solid #f0b27a; }
+
+/* QUICK REF TABLES */
+.quick-ref {
+  background: var(--paper); border: 2px solid var(--ink);
+  border-radius: 8px; overflow: hidden;
+  margin-bottom: 1.5rem;
+  box-shadow: 3px 3px 0 var(--ink);
+}
+.quick-ref-title {
+  background: var(--ink); color: #ffd700;
+  font-family: 'Bebas Neue', cursive;
+  font-size: 1.1rem; letter-spacing: 2px;
+  padding: 0.5rem 1rem;
+}
+table { width: 100%; border-collapse: collapse; }
+th {
+  background: #f0ebe0;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--muted); padding: 0.5rem 0.75rem; text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+td {
+  padding: 0.45rem 0.75rem; font-size: 0.78rem;
+  border-bottom: 1px solid #ece8e0; vertical-align: top;
+}
+td:first-child {
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 700; color: var(--accent); white-space: nowrap;
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: #f5f0e6; }
+
+/* TRAP BANNER */
+.trap-banner {
+  background: #fff0f0; border: 1px solid #ffaaaa;
+  border-left: 4px solid var(--accent);
+  border-radius: 4px; padding: 0.6rem 1rem;
+  margin: 0.75rem 0; font-size: 0.8rem;
+  font-family: 'IBM Plex Mono', monospace; color: #8b0000;
+}
+.trap-banner::before { content: "⚠ TRAP: "; font-weight: 700; }
+
+.sample-q {
+  background: #e8f4fd; border: 1px solid #b3d7f0;
+  border-left: 4px solid var(--accent2);
+  border-radius: 4px; padding: 0.6rem 1rem;
+  margin-top: 0.75rem; font-size: 0.8rem; color: #1a3a5c;
+}
+.sample-q::before { content: "📝 SAMPLE Q: "; font-weight: 700; font-family: 'IBM Plex Mono', monospace; }
+
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-row">
+    <div class="site-title">C<span>++</span> STL</div>
+    <div class="subtitle">// complete cheatsheet for competitive programming</div>
+  </div>
+  <nav class="nav-tabs">
+    <button class="nav-tab active" onclick="showSection('overview',this)">OVERVIEW</button>
+    <button class="nav-tab" onclick="showSection('vector',this)">VECTOR</button>
+    <button class="nav-tab" onclick="showSection('string',this)">STRING</button>
+    <button class="nav-tab" onclick="showSection('map',this)">MAP</button>
+    <button class="nav-tab" onclick="showSection('set',this)">SET</button>
+    <button class="nav-tab" onclick="showSection('stack',this)">STACK</button>
+    <button class="nav-tab" onclick="showSection('queue',this)">QUEUE / DEQUE</button>
+    <button class="nav-tab" onclick="showSection('pq',this)">PRIORITY QUEUE</button>
+    <button class="nav-tab" onclick="showSection('algo',this)">ALGORITHMS</button>
+    <button class="nav-tab" onclick="showSection('unordered',this)">UNORDERED</button>
+    <button class="nav-tab" onclick="showSection('pairs',this)">PAIR / TUPLE</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ═══════════════════════════════════════════════════════ OVERVIEW -->
+<section class="stl-section visible" id="sec-overview">
+  <div class="section-heading">STL AT A GLANCE</div>
+  <div class="section-desc">// header files + container chooser + insert method confusion buster</div>
+
+  <div class="quick-ref">
+    <div class="quick-ref-title">🧠 INSERT METHOD — THE ONE THING EVERYONE FORGETS</div>
+    <table>
+      <tr><th>Container</th><th>Add Element</th><th>Remove</th><th>Access</th><th>Header</th></tr>
+      <tr><td>vector</td><td>push_back(x)</td><td>pop_back()</td><td>v[i] or at(i)</td><td>&lt;vector&gt;</td></tr>
+      <tr><td>string</td><td>push_back(c) / +=</td><td>pop_back()</td><td>s[i]</td><td>&lt;string&gt;</td></tr>
+      <tr><td>stack</td><td>push(x)</td><td>pop()</td><td>top()</td><td>&lt;stack&gt;</td></tr>
+      <tr><td>queue</td><td>push(x)</td><td>pop()</td><td>front() / back()</td><td>&lt;queue&gt;</td></tr>
+      <tr><td>priority_queue</td><td>push(x)</td><td>pop()</td><td>top()</td><td>&lt;queue&gt;</td></tr>
+      <tr><td>deque</td><td>push_back / push_front</td><td>pop_back / pop_front</td><td>d[i]</td><td>&lt;deque&gt;</td></tr>
+      <tr><td>set</td><td>insert(x)</td><td>erase(x)</td><td>find(x) → iterator</td><td>&lt;set&gt;</td></tr>
+      <tr><td>multiset</td><td>insert(x)</td><td>erase(x)</td><td>find(x)</td><td>&lt;set&gt;</td></tr>
+      <tr><td>map</td><td>m[key]=val / insert</td><td>erase(key)</td><td>m[key]</td><td>&lt;map&gt;</td></tr>
+      <tr><td>unordered_map</td><td>m[key]=val</td><td>erase(key)</td><td>m[key]</td><td>&lt;unordered_map&gt;</td></tr>
+      <tr><td>unordered_set</td><td>insert(x)</td><td>erase(x)</td><td>find(x)</td><td>&lt;unordered_set&gt;</td></tr>
+    </table>
+  </div>
+
+  <div class="quick-ref">
+    <div class="quick-ref-title">📦 WHICH CONTAINER TO USE?</div>
+    <table>
+      <tr><th>You need to...</th><th>Use</th><th>Why</th></tr>
+      <tr><td>Store sequence, random access</td><td>vector</td><td>Fast index access O(1)</td></tr>
+      <tr><td>Frequency count of elements</td><td>map / unordered_map</td><td>Key-value pair</td></tr>
+      <tr><td>Check if element exists (unique)</td><td>set / unordered_set</td><td>No duplicates, fast find</td></tr>
+      <tr><td>LIFO — undo, bracket matching</td><td>stack</td><td>Last in first out</td></tr>
+      <tr><td>FIFO — BFS, scheduling</td><td>queue</td><td>First in first out</td></tr>
+      <tr><td>Always get max/min quickly</td><td>priority_queue</td><td>Heap — O(logn) push/pop</td></tr>
+      <tr><td>Sorted unique elements</td><td>set</td><td>Always sorted, no dups</td></tr>
+      <tr><td>Sorted key-value pairs</td><td>map</td><td>Ordered by key</td></tr>
+      <tr><td>Fast freq count (no order needed)</td><td>unordered_map</td><td>O(1) avg insert/find</td></tr>
+      <tr><td>Insert/delete both ends fast</td><td>deque</td><td>O(1) front and back ops</td></tr>
+    </table>
+  </div>
+
+  <div class="quick-ref">
+    <div class="quick-ref-title">📋 ALL HEADERS AT ONCE — PASTE IN EVERY PROGRAM</div>
+    <div class="code-block">
+<span class="cm">// ── LAZY INCLUDE — use this in competitions ──</span>
+<span class="kw">#include</span> <span class="st">&lt;bits/stdc++.h&gt;</span>   <span class="cm">// includes EVERYTHING</span>
+<span class="kw">using namespace</span> std;
+
+<span class="cm">// ── OR specific headers ──</span>
+<span class="kw">#include</span> <span class="st">&lt;vector&gt;</span>
+<span class="kw">#include</span> <span class="st">&lt;string&gt;</span>
+<span class="kw">#include</span> <span class="st">&lt;map&gt;</span>
+<span class="kw">#include</span> <span class="st">&lt;set&gt;</span>
+<span class="kw">#include</span> <span class="st">&lt;stack&gt;</span>
+<span class="kw">#include</span> <span class="st">&lt;queue&gt;</span>          <span class="cm">// also for priority_queue</span>
+<span class="kw">#include</span> <span class="st">&lt;deque&gt;</span>
+<span class="kw">#include</span> <span class="st">&lt;algorithm&gt;</span>      <span class="cm">// sort, find, reverse, etc.</span>
+<span class="kw">#include</span> <span class="st">&lt;unordered_map&gt;</span>
+<span class="kw">#include</span> <span class="st">&lt;unordered_set&gt;</span>
+<span class="kw">#include</span> <span class="st">&lt;numeric&gt;</span>        <span class="cm">// accumulate, iota</span>
+<span class="kw">#include</span> <span class="st">&lt;utility&gt;</span>        <span class="cm">// pair, make_pair</span>
+<span class="kw">#include</span> <span class="st">&lt;climits&gt;</span>        <span class="cm">// INT_MAX, INT_MIN, LLONG_MAX</span>
+<span class="kw">#include</span> <span class="st">&lt;cmath&gt;</span>          <span class="cm">// sqrt, pow, abs</span>
+<span class="kw">#include</span> <span class="st">&lt;iomanip&gt;</span>        <span class="cm">// setw, setprecision</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ VECTOR -->
+<section class="stl-section" id="sec-vector">
+  <div class="section-heading">VECTOR</div>
+  <div class="section-desc">// #include &lt;vector&gt; — dynamic array, most used container</div>
+
+  <div class="container-block">
+    <div class="container-header">
+      <div class="container-name">vector&lt;T&gt;</div>
+      <div class="header-file">#include &lt;vector&gt;</div>
+      <div class="container-tagline">Dynamic array — grows automatically. Random access O(1). Your go-to container.</div>
+    </div>
+    <div class="container-body">
+      <div class="use-case-row">
+        <div class="info-box when">
+          <div class="label blue">WHEN TO USE</div>
+          <p>Need array that grows dynamically. Need random index access. Storing results to print later. Custom sort.</p>
+        </div>
+        <div class="info-box trap">
+          <div class="label red">TRAPS</div>
+          <p>v[i] on empty vector = crash. push_back (not insert). pop_back removes LAST, not arbitrary.</p>
+        </div>
+      </div>
+
+      <div class="methods-label">ALL METHODS</div>
+      <div class="methods-grid">
+        <div class="method-row"><span class="method-name">push_back(x)</span><span class="method-desc">Add x to end</span><span class="method-note">O(1) amort</span></div>
+        <div class="method-row"><span class="method-name">pop_back()</span><span class="method-desc">Remove last element</span><span class="method-note">O(1)</span></div>
+        <div class="method-row"><span class="method-name">v[i]</span><span class="method-desc">Access index i (no bounds check)</span><span class="method-note">O(1)</span></div>
+        <div class="method-row"><span class="method-name">v.at(i)</span><span class="method-desc">Access with bounds check, throws</span><span class="method-note">O(1)</span></div>
+        <div class="method-row"><span class="method-name">v.front()</span><span class="method-desc">First element</span><span class="method-note">O(1)</span></div>
+        <div class="method-row"><span class="method-name">v.back()</span><span class="method-desc">Last element</span><span class="method-note">O(1)</span></div>
+        <div class="method-row"><span class="method-name">v.size()</span><span class="method-desc">Number of elements (returns size_t)</span><span class="method-note">O(1)</span></div>
+        <div class="method-row"><span class="method-name">v.empty()</span><span class="method-desc">Returns true if size==0</span><span class="method-note">O(1)</span></div>
+        <div class="method-row"><span class="method-name">v.clear()</span><span class="method-desc">Remove all elements</span><span class="method-note">O(n)</span></div>
+        <div class="method-row"><span class="method-name">v.resize(n)</span><span class="method-desc">Resize to n (fill with 0)</span><span class="method-note">O(n)</span></div>
+        <div class="method-row"><span class="method-name">v.assign(n,x)</span><span class="method-desc">Fill n elements with value x</span><span class="method-note">O(n)</span></div>
+        <div class="method-row"><span class="method-name">v.insert(it,x)</span><span class="method-desc">Insert before iterator</span><span class="method-note">O(n)</span></div>
+        <div class="method-row"><span class="method-name">v.erase(it)</span><span class="method-desc">Erase at iterator</span><span class="method-note">O(n)</span></div>
+        <div class="method-row"><span class="method-name">v.begin()</span><span class="method-desc">Iterator to first</span><span class="method-note">O(1)</span></div>
+        <div class="method-row"><span class="method-name">v.end()</span><span class="method-desc">Iterator past last</span><span class="method-note">O(1)</span></div>
+        <div class="method-row"><span class="method-name">v.rbegin()</span><span class="method-desc">Reverse iterator to last</span><span class="method-note">O(1)</span></div>
+      </div>
+
+      <div class="trap-banner">v.size() returns unsigned type. v.size()-1 when v is empty = HUGE number (underflow). Always check !v.empty() first.</div>
+      <div class="sample-q">Find frequency of each element and print in insertion order. Use vector to maintain order, map for count.</div>
+
+      <div class="code-block">
+<span class="cm">// ── Declaration ──</span>
+<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; v;                    <span class="cm">// empty</span>
+<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; v(<span class="nu">5</span>);                 <span class="cm">// size 5, all 0</span>
+<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; v(<span class="nu">5</span>, <span class="nu">-1</span>);             <span class="cm">// size 5, all -1</span>
+<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; v = {<span class="nu">1</span>,<span class="nu">2</span>,<span class="nu">3</span>,<span class="nu">4</span>};        <span class="cm">// initializer list</span>
+<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; mat(<span class="nu">3</span>, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;(<span class="nu">3</span>,<span class="nu">0</span>));  <span class="cm">// 3x3 matrix</span>
+
+<span class="cm">// ── Common ops ──</span>
+v.<span class="fn">push_back</span>(<span class="nu">10</span>);
+v.<span class="fn">push_back</span>(<span class="nu">20</span>);
+cout &lt;&lt; v[<span class="nu">0</span>];                    <span class="cm">// 10</span>
+cout &lt;&lt; v.<span class="fn">back</span>();                 <span class="cm">// 20</span>
+v.<span class="fn">pop_back</span>();                     <span class="cm">// removes 20</span>
+
+<span class="cm">// ── Iteration ──</span>
+<span class="kw">for</span>(<span class="ty">int</span> x : v) cout &lt;&lt; x &lt;&lt; <span class="st">" "</span>;  <span class="cm">// range-for</span>
+<span class="kw">for</span>(<span class="ty">int</span> i=<span class="nu">0</span>; i&lt;v.<span class="fn">size</span>(); i++) cout &lt;&lt; v[i];
+
+<span class="cm">// ── Sort ──</span>
+<span class="fn">sort</span>(v.<span class="fn">begin</span>(), v.<span class="fn">end</span>());          <span class="cm">// ascending</span>
+<span class="fn">sort</span>(v.<span class="fn">begin</span>(), v.<span class="fn">end</span>(), <span class="fn">greater</span>&lt;<span class="ty">int</span>&gt;()); <span class="cm">// descending</span>
+
+<span class="cm">// ── Erase duplicates ──</span>
+<span class="fn">sort</span>(v.<span class="fn">begin</span>(), v.<span class="fn">end</span>());
+v.<span class="fn">erase</span>(<span class="fn">unique</span>(v.<span class="fn">begin</span>(), v.<span class="fn">end</span>()), v.<span class="fn">end</span>()); <span class="cm">// sort first!</span>
+
+<span class="cm">// ── 2D vector input ──</span>
+<span class="ty">int</span> n, m; cin &gt;&gt; n &gt;&gt; m;
+<span class="ty">vector</span>&lt;<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;&gt; mat(n, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;(m));
+<span class="kw">for</span>(<span class="ty">int</span> i=<span class="nu">0</span>;i&lt;n;i++)
+  <span class="kw">for</span>(<span class="ty">int</span> j=<span class="nu">0</span>;j&lt;m;j++) cin &gt;&gt; mat[i][j];
+      </div>
+      <div class="complexity-row">
+        <span class="complexity-tag O1">push_back O(1)</span>
+        <span class="complexity-tag O1">access O(1)</span>
+        <span class="complexity-tag On">insert/erase O(n)</span>
+        <span class="complexity-tag Onlogn">sort O(nlogn)</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ STRING -->
+<section class="stl-section" id="sec-string">
+  <div class="section-heading">STRING</div>
+  <div class="section-desc">// #include &lt;string&gt; — already in &lt;bits/stdc++.h&gt;</div>
+  <div class="container-block">
+    <div class="container-header">
+      <div class="container-name">std::string</div>
+      <div class="header-file">#include &lt;string&gt;</div>
+      <div class="container-tagline">Dynamic character array with rich methods. Behaves like vector&lt;char&gt; but with string-specific ops.</div>
+    </div>
+    <div class="container-body">
+      <div class="use-case-row">
+        <div class="info-box when"><div class="label blue">WHEN TO USE</div><p>Text processing, character manipulation, palindrome, anagram, pattern matching problems.</p></div>
+        <div class="info-box trap"><div class="label red">TRAPS</div><p>'a'-'0' is wrong for char to int. Use ch-'0' for digit, ch-'a' for lowercase letter. stoi() needs &lt;string&gt;.</p></div>
+      </div>
+      <div class="methods-label">ALL METHODS</div>
+      <div class="methods-grid">
+        <div class="method-row"><span class="method-name">s.length() / size()</span><span class="method-desc">Length of string</span><span class="method-note">O(1)</span></div>
+        <div class="method-row"><span class="method-name">s.push_back(c)</span><span class="method-desc">Append char</span><span class="method-note">O(1)</span></div>
+        <div class="method-row"><span class="method-name">s.pop_back()</span><span class="method-desc">Remove last char</span><span class="method-note">O(1)</span></div>
+        <div class="method-row"><span class="method-name">s += "abc"</span><span class="method-desc">Append string/char</span><span class="method-note">O(k)</span></div>
+        <div class="method-row"><span class="method-name">s.substr(i,len)</span><span class="method-desc">Substring from i, length len</span><span class="method-note">O(len)</span></div>
+        <div class="method-row"><span class="method-name">s.find("ab")</span><span class="method-desc">First pos of substring, npos if not found</span><span class="method-note">O(n)</span></div>
+        <div class="method-row"><span class="method-name">s.rfind("ab")</span><span class="method-desc">Last position of substring</span><span class="method-note">O(n)</span></div>
+        <div class="method-row"><span class="method-name">s.replace(i,len,t)</span><span class="method-desc">Replace len chars at i with t</span><span class="method-note">O(n)</span></div>
+        <div class="method-row"><span class="method-name">s.erase(i,len)</span><span class="method-desc">Delete len chars from i</span><span class="method-note">O(n)</span></div>
+        <div class="method-row"><span class="method-name">s.insert(i,"ab")</span><span class="method-desc">Insert at position i</span><span class="method-note">O(n)</span></div>
+        <div class="method-row"><span class="method-name">s.compare(t)</span><span class="method-desc">0 if equal, &lt;0 or &gt;0 otherwise</span><span class="method-note">O(n)</span></div>
+        <div class="method-row"><span class="method-name">s.empty()</span><span class="method-desc">True if length==0</span><span class="method-note">O(1)</span></div>
+        <div class="method-row"><span class="method-name">s.clear()</span><span class="method-desc">Make string empty</span><span class="method-note">O(1)</span></div>
+        <div class="method-row"><span class="method-name">stoi(s)</span><span class="method-desc">String to int</span><span class="method-note">O(n)</span></div>
+        <div class="method-row"><span class="method-name">to_string(n)</span><span class="method-desc">Int/float to string</span><span class="method-note">O(digits)</span></div>
+        <div class="method-row"><span class="method-name">s.begin()/end()</span><span class="method-desc">Iterators (use with sort/reverse)</span><span class="method-note">O(1)</span></div>
+      </div>
+      <div class="trap-banner">s.find() returns string::npos (a huge number) when not found. Check: if(s.find("x") != string::npos)</div>
+      <div class="sample-q">Check if s2 is a rotation of s1: if(s1.length()==s2.length() && (s1+s1).find(s2)!=string::npos)</div>
+      <div class="code-block">
+<span class="cm">// ── Char tricks ──</span>
+<span class="ty">char</span> c = <span class="st">'7'</span>;
+<span class="ty">int</span> digit = c - <span class="st">'0'</span>;             <span class="cm">// char digit → int</span>
+<span class="ty">char</span> back = digit + <span class="st">'0'</span>;         <span class="cm">// int → char digit</span>
+<span class="ty">int</span> pos = c - <span class="st">'a'</span>;               <span class="cm">// 'a'→0, 'b'→1, ...'z'→25</span>
+<span class="fn">tolower</span>(c);  <span class="fn">toupper</span>(c);         <span class="cm">// change case</span>
+<span class="fn">isalpha</span>(c);  <span class="fn">isdigit</span>(c);         <span class="cm">// check type</span>
+<span class="fn">isspace</span>(c);  <span class="fn">isalnum</span>(c);
+
+<span class="cm">// ── Split string by space (stringstream) ──</span>
+<span class="ty">string</span> line = <span class="st">"hello world foo"</span>;
+<span class="ty">stringstream</span> ss(line);
+<span class="ty">string</span> word;
+<span class="ty">vector</span>&lt;<span class="ty">string</span>&gt; words;
+<span class="kw">while</span>(ss &gt;&gt; word) words.<span class="fn">push_back</span>(word);  <span class="cm">// handles multi-spaces!</span>
+
+<span class="cm">// ── Reverse string ──</span>
+<span class="fn">reverse</span>(s.<span class="fn">begin</span>(), s.<span class="fn">end</span>());
+
+<span class="cm">// ── Sort string chars ──</span>
+<span class="fn">sort</span>(s.<span class="fn">begin</span>(), s.<span class="fn">end</span>());
+
+<span class="cm">// ── Check anagram ──</span>
+<span class="ty">string</span> a = <span class="st">"listen"</span>, b = <span class="st">"silent"</span>;
+<span class="fn">sort</span>(a.<span class="fn">begin</span>(),a.<span class="fn">end</span>());
+<span class="fn">sort</span>(b.<span class="fn">begin</span>(),b.<span class="fn">end</span>());
+<span class="kw">if</span>(a == b) cout &lt;&lt; <span class="st">"Anagram"</span>;
+
+<span class="cm">// ── Read full line ──</span>
+<span class="ty">string</span> s;
+<span class="fn">getline</span>(cin, s);   <span class="cm">// reads spaces too</span>
+<span class="cm">// After cin>>, add cin.ignore() before getline!</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ MAP -->
+<section class="stl-section" id="sec-map">
+  <div class="section-heading">MAP</div>
+  <div class="section-desc">// #include &lt;map&gt; — sorted key-value pairs, keys always unique</div>
+  <div class="container-block">
+    <div class="container-header">
+      <div class="container-name">map&lt;K,V&gt;</div>
+      <div class="header-file">#include &lt;map&gt;</div>
+      <div class="container-tagline">Sorted key→value store. Keys auto-sorted ascending. No duplicate keys. Red-black tree internally.</div>
+    </div>
+    <div class="container-body">
+      <div class="use-case-row">
+        <div class="info-box when"><div class="label blue">WHEN TO USE</div><p>Frequency count. Mapping values. Need sorted output by key. Character count in string.</p></div>
+        <div class="info-box trap"><div class="label red">TRAPS</div><p>m[key] AUTO-CREATES entry with 0 if key missing. Use count(key) to check existence. Map iterates sorted, NOT insertion order.</p></div>
+      </div>
+      <div class="methods-label">ALL METHODS</div>
+      <div class="methods-grid">
+        <div class="method-row"><span class="method-name">m[key] = val</span><span class="method-desc">Insert or update value</span><span class="method-note">O(logn)</span></div>
+        <div class="method-row"><span class="method-name">m[key]++</span><span class="method-desc">Increment (creates if absent)</span><span class="method-note">O(logn)</span></div>
+        <div class="method-row"><span class="method-name">m.count(key)</span><span class="method-desc">1 if exists, 0 if not</span><span class="method-note">O(logn)</span></div>
+        <div class="method-row"><span class="method-name">m.find(key)</span><span class="method-desc">Iterator, m.end() if not found</span><span class="method-note">O(logn)</span></div>
+        <div class="method-row"><span class="method-name">m.erase(key)</span><span class="method-desc">Remove by key</span><span class="method-note">O(logn)</span></div>
+        <div class="method-row"><span class="method-name">m.size()</span><span class="method-desc">Number of key-value pairs</span><span class="method-note">O(1)</span></div>
+        <div class="method-row"><span class="method-name">m.empty()</span><span class="method-desc">True if no entries</span><span class="method-note">O(1)</span></div>
+        <div class="method-row"><span class="method-name">m.clear()</span><span class="method-desc">Remove all entries</span><span class="method-note">O(n)</span></div>
+        <div class="method-row"><span class="method-name">m.begin()/end()</span><span class="method-desc">Iterators (sorted order)</span><span class="method-note">O(1)</span></div>
+        <div class="method-row"><span class="method-name">it→first</span><span class="method-desc">Key of iterator</span><span class="method-note">—</span></div>
+        <div class="method-row"><span class="method-name">it→second</span><span class="method-desc">Value of iterator</span><span class="method-note">—</span></div>
+        <div class="method-row"><span class="method-name">m.insert({k,v})</span><span class="method-desc">Insert pair (won't overwrite)</span><span class="method-note">O(logn)</span></div>
+      </div>
+      <div class="trap-banner">if(m[key]) — this CREATES the key with value 0 if it didn't exist! Use m.count(key) instead to just CHECK.</div>
+      <div class="sample-q">Find first non-repeating character: build freq map, then iterate ORIGINAL string to preserve order.</div>
+      <div class="code-block">
+<span class="cm">// ── Frequency count ──</span>
+<span class="ty">string</span> s = <span class="st">"hello"</span>;
+<span class="ty">map</span>&lt;<span class="ty">char</span>,<span class="ty">int</span>&gt; freq;
+<span class="kw">for</span>(<span class="ty">char</span> c : s) freq[c]++;       <span class="cm">// h:1 e:1 l:2 o:1</span>
+
+<span class="cm">// ── Iterate map (sorted by key) ──</span>
+<span class="kw">for</span>(<span class="kw">auto</span> p : freq)
+  cout &lt;&lt; p.first &lt;&lt; <span class="st">":"</span> &lt;&lt; p.second &lt;&lt; <span class="st">"\n"</span>;
+
+<span class="cm">// ── Structured binding (C++17) ──</span>
+<span class="kw">for</span>(<span class="kw">auto</span> [key, val] : freq)
+  cout &lt;&lt; key &lt;&lt; <span class="st">" "</span> &lt;&lt; val &lt;&lt; <span class="st">"\n"</span>;
+
+<span class="cm">// ── Check existence safely ──</span>
+<span class="kw">if</span>(freq.<span class="fn">count</span>(<span class="st">'z'</span>)) cout &lt;&lt; <span class="st">"z exists"</span>;
+<span class="cm">// NOT: if(freq['z']) ← this CREATES freq['z']=0</span>
+
+<span class="cm">// ── First non-repeating char ──</span>
+<span class="kw">for</span>(<span class="ty">char</span> c : s)
+  <span class="kw">if</span>(freq[c] == <span class="nu">1</span>) { cout &lt;&lt; c; <span class="kw">break</span>; }  <span class="cm">// iterate ORIGINAL string</span>
+
+<span class="cm">// ── multimap: allows duplicate keys ──</span>
+<span class="ty">multimap</span>&lt;<span class="ty">int</span>,<span class="ty">string</span>&gt; mm;
+mm.<span class="fn">insert</span>({<span class="nu">1</span>,<span class="st">"a"</span>}); mm.<span class="fn">insert</span>({<span class="nu">1</span>,<span class="st">"b"</span>});  <span class="cm">// both stored</span>
+      </div>
+      <div class="complexity-row">
+        <span class="complexity-tag Ologn">insert O(logn)</span>
+        <span class="complexity-tag Ologn">find O(logn)</span>
+        <span class="complexity-tag Ologn">erase O(logn)</span>
+        <span class="complexity-tag On">iterate O(n)</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ SET -->
+<section class="stl-section" id="sec-set">
+  <div class="section-heading">SET</div>
+  <div class="section-desc">// #include &lt;set&gt; — sorted unique elements, no duplicates</div>
+  <div class="container-block">
+    <div class="container-header">
+      <div class="container-name">set&lt;T&gt;</div>
+      <div class="header-file">#include &lt;set&gt;</div>
+      <div class="container-tagline">Auto-sorted, unique elements only. Use INSERT not push_back. Find is O(logn).</div>
+    </div>
+    <div class="container-body">
+      <div class="use-case-row">
+        <div class="info-box when"><div class="label blue">WHEN TO USE</div><p>Remove duplicates. Check existence fast. Need sorted unique collection. Seen[] tracking.</p></div>
+        <div class="info-box trap"><div class="label red">TRAPS</div><p>IT'S insert() NOT push_back(). Can't access by index (s[0] doesn't work). Iterating gives sorted order, not insertion order.</p></div>
+      </div>
+      <div class="methods-label">ALL METHODS</div>
+      <div class="methods-grid">
+        <div class="method-row"><span class="method-name">s.insert(x)</span><span class="method-desc">Add element (ignored if exists)</span><span class="method-note">O(logn)</span></div>
+        <div class="method-row"><span class="method-name">s.erase(x)</span><span class="method-desc">Remove element by value</span><span class="method-note">O(logn)</span></div>
+        <div class="method-row"><span class="method-name">s.count(x)</span><span class="method-desc">1 if present, 0 if not</span><span class="method-note">O(logn)</span></div>
+        <div class="method-row"><span class="method-name">s.find(x)</span><span class="method-desc">Iterator, s.end() if not found</span><span class="method-note">O(logn)</span></div>
+        <div class="method-row"><span class="method-name">s.size()</span><span class="method-desc">Number of elements</span><span class="method-note">O(1)</span></div>
+        <div class="method-row"><span class="method-name">s.empty()</span><span class="method-desc">True if empty</span><span class="method-note">O(1)</span></div>
+        <div class="method-row"><span class="method-name">s.clear()</span><span class="method-desc">Remove all</span><span class="method-note">O(n)</span></div>
+        <div class="method-row"><span class="method-name">s.begin()/end()</span><span class="method-desc">Iterators (sorted)</span><span class="method-note">O(1)</span></div>
+        <div class="method-row"><span class="method-name">*s.begin()</span><span class="method-desc">Smallest element</span><span class="method-note">O(1)</span></div>
+        <div class="method-row"><span class="method-name">*s.rbegin()</span><span class="method-desc">Largest element</span><span class="method-note">O(1)</span></div>
+        <div class="method-row"><span class="method-name">s.lower_bound(x)</span><span class="method-desc">Iterator to first ≥ x</span><span class="method-note">O(logn)</span></div>
+        <div class="method-row"><span class="method-name">s.upper_bound(x)</span><span class="method-desc">Iterator to first > x</span><span class="method-note">O(logn)</span></div>
+      </div>
+      <div class="trap-banner">SET uses insert(), NOT push_back(). This is the #1 mistake. Also: s[0] does NOT work — no index access in set.</div>
+      <div class="sample-q">Remove duplicates from array preserving order: use set&lt;int&gt; seen; if(!seen.count(x)){result.push_back(x); seen.insert(x);}</div>
+      <div class="code-block">
+<span class="cm">// ── Basic set usage ──</span>
+<span class="ty">set</span>&lt;<span class="ty">int</span>&gt; s;
+s.<span class="fn">insert</span>(<span class="nu">5</span>);  s.<span class="fn">insert</span>(<span class="nu">3</span>);  s.<span class="fn">insert</span>(<span class="nu">5</span>);  <span class="cm">// {3,5} — sorted, no dup</span>
+
+<span class="kw">if</span>(s.<span class="fn">count</span>(<span class="nu">3</span>)) cout &lt;&lt; <span class="st">"found"</span>;      <span class="cm">// preferred check</span>
+<span class="kw">if</span>(s.<span class="fn">find</span>(<span class="nu">3</span>) != s.<span class="fn">end</span>()) cout &lt;&lt; <span class="st">"found"</span>;
+
+s.<span class="fn">erase</span>(<span class="nu">3</span>);                          <span class="cm">// remove by value</span>
+
+<span class="cm">// ── Iterate (always sorted) ──</span>
+<span class="kw">for</span>(<span class="ty">int</span> x : s) cout &lt;&lt; x &lt;&lt; <span class="st">" "</span>;
+
+<span class="cm">// ── Min and Max ──</span>
+cout &lt;&lt; *s.<span class="fn">begin</span>();   <span class="cm">// minimum</span>
+cout &lt;&lt; *s.<span class="fn">rbegin</span>();  <span class="cm">// maximum</span>
+
+<span class="cm">// ── Remove duplicates from vector ──</span>
+<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; v = {<span class="nu">4</span>,<span class="nu">2</span>,<span class="nu">1</span>,<span class="nu">2</span>,<span class="nu">4</span>};
+<span class="ty">set</span>&lt;<span class="ty">int</span>&gt; seen;
+<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; res;
+<span class="kw">for</span>(<span class="ty">int</span> x : v)
+  <span class="kw">if</span>(!seen.<span class="fn">count</span>(x)){ res.<span class="fn">push_back</span>(x); seen.<span class="fn">insert</span>(x); }
+
+<span class="cm">// ── multiset: allows duplicates, still sorted ──</span>
+<span class="ty">multiset</span>&lt;<span class="ty">int</span>&gt; ms;
+ms.<span class="fn">insert</span>(<span class="nu">3</span>); ms.<span class="fn">insert</span>(<span class="nu">3</span>);  <span class="cm">// {3,3} stored</span>
+ms.<span class="fn">erase</span>(ms.<span class="fn">find</span>(<span class="nu">3</span>));         <span class="cm">// removes ONE occurrence only</span>
+<span class="cm">// ms.erase(3) removes ALL 3s — careful!</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ STACK -->
+<section class="stl-section" id="sec-stack">
+  <div class="section-heading">STACK</div>
+  <div class="section-desc">// #include &lt;stack&gt; — LIFO: Last In First Out</div>
+  <div class="container-block">
+    <div class="container-header">
+      <div class="container-name">stack&lt;T&gt;</div>
+      <div class="header-file">#include &lt;stack&gt;</div>
+      <div class="container-tagline">LIFO structure. Top element accessible. No iteration. No index access. push/pop/top only.</div>
+    </div>
+    <div class="container-body">
+      <div class="use-case-row">
+        <div class="info-box when"><div class="label blue">WHEN TO USE</div><p>Bracket matching. Undo operations. Next greater element. Expression evaluation. DFS simulation.</p></div>
+        <div class="info-box trap"><div class="label red">TRAPS</div><p>stack.peek() DOES NOT EXIST in C++. Use top(). pop() returns void — get value with top() BEFORE pop(). No iteration.</p></div>
+      </div>
+      <div class="methods-label">ALL METHODS (only 5!)</div>
+      <div class="methods-grid">
+        <div class="method-row"><span class="method-name">st.push(x)</span><span class="method-desc">Add element to top</span><span class="method-note">O(1)</span></div>
+        <div class="method-row"><span class="method-name">st.pop()</span><span class="method-desc">Remove top (returns VOID)</span><span class="method-note">O(1)</span></div>
+        <div class="method-row"><span class="method-name">st.top()</span><span class="method-desc">View top element (not removed)</span><span class="method-note">O(1)</span></div>
+        <div class="method-row"><span class="method-name">st.size()</span><span class="method-desc">Number of elements</span><span class="method-note">O(1)</span></div>
+        <div class="method-row"><span class="method-name">st.empty()</span><span class="method-desc">True if no elements</span><span class="method-note">O(1)</span></div>
+      </div>
+      <div class="trap-banner">Java has stack.peek() — C++ has stack.top(). Also: ALWAYS check !st.empty() before calling top() or pop().</div>
+      <div class="sample-q">Balanced brackets: push open brackets, on close bracket check top() matches, then pop(). If stack empty at end → balanced.</div>
+      <div class="code-block">
+<span class="cm">// ── Balanced brackets ──</span>
+<span class="ty">string</span> s = <span class="st">"({[]})"</span>;
+<span class="ty">stack</span>&lt;<span class="ty">char</span>&gt; st;
+<span class="ty">bool</span> ok = <span class="kw">true</span>;
+<span class="kw">for</span>(<span class="ty">char</span> c : s){
+  <span class="kw">if</span>(c==<span class="st">'('</span>||c==<span class="st">'{'</span>||c==<span class="st">'['</span>) st.<span class="fn">push</span>(c);
+  <span class="kw">else</span> {
+    <span class="kw">if</span>(st.<span class="fn">empty</span>()){ ok=<span class="kw">false</span>; <span class="kw">break</span>; }
+    <span class="ty">char</span> top = st.<span class="fn">top</span>(); st.<span class="fn">pop</span>();  <span class="cm">// get THEN pop</span>
+    <span class="kw">if</span>((c==<span class="st">')'</span>&&top!=<span class="st">'('</span>)||(c==<span class="st">'}'</span>&&top!=<span class="st">'{'</span>)||(c==<span class="st">']'</span>&&top!=<span class="st">'['</span>))
+      { ok=<span class="kw">false</span>; <span class="kw">break</span>; }
+  }
+}
+<span class="kw">if</span>(!st.<span class="fn">empty</span>()) ok=<span class="kw">false</span>;
+cout &lt;&lt; (ok ? <span class="st">"YES"</span> : <span class="st">"NO"</span>);
+
+<span class="cm">// ── Next Greater Element ──</span>
+<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; v = {<span class="nu">4</span>,<span class="nu">5</span>,<span class="nu">2</span>,<span class="nu">25</span>};
+<span class="ty">stack</span>&lt;<span class="ty">int</span>&gt; stk;   <span class="cm">// stores indices</span>
+<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; nge(v.<span class="fn">size</span>(), -<span class="nu">1</span>);
+<span class="kw">for</span>(<span class="ty">int</span> i=<span class="nu">0</span>; i&lt;v.<span class="fn">size</span>(); i++){
+  <span class="kw">while</span>(!stk.<span class="fn">empty</span>() && v[stk.<span class="fn">top</span>()]&lt;v[i]){
+    nge[stk.<span class="fn">top</span>()] = v[i]; stk.<span class="fn">pop</span>();
+  }
+  stk.<span class="fn">push</span>(i);
+}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ QUEUE/DEQUE -->
+<section class="stl-section" id="sec-queue">
+  <div class="section-heading">QUEUE / DEQUE</div>
+  <div class="section-desc">// #include &lt;queue&gt; and #include &lt;deque&gt;</div>
+  <div class="container-block">
+    <div class="container-header">
+      <div class="container-name">queue&lt;T&gt; / deque&lt;T&gt;</div>
+      <div class="header-file">#include &lt;queue&gt; / #include &lt;deque&gt;</div>
+      <div class="container-tagline">Queue: FIFO. Deque: double-ended, push/pop from BOTH front and back.</div>
+    </div>
+    <div class="container-body">
+      <div class="use-case-row">
+        <div class="info-box when"><div class="label blue">WHEN TO USE</div><p>Queue: BFS, scheduling. Deque: sliding window max/min, when you need push/pop from both ends.</p></div>
+        <div class="info-box trap"><div class="label red">TRAPS</div><p>Queue: front() for first, back() for last. pop() removes FRONT (not back). No index access in queue.</p></div>
+      </div>
+      <div class="methods-label">QUEUE METHODS</div>
+      <div class="methods-grid">
+        <div class="method-row"><span class="method-name">q.push(x)</span><span class="method-desc">Add to back</span><span class="method-note">O(1)</span></div>
+        <div class="method-row"><span class="method-name">q.pop()</span><span class="method-desc">Remove from FRONT (void)</span><span class="method-note">O(1)</span></div>
+        <div class="method-row"><span class="method-name">q.front()</span><span class="method-desc">First element (oldest)</span><span class="method-note">O(1)</span></div>
+        <div class="method-row"><span class="method-name">q.back()</span><span class="method-desc">Last element (newest)</span><span class="method-note">O(1)</span></div>
+        <div class="method-row"><span class="method-name">q.size()</span><span class="method-desc">Number of elements</span><span class="method-note">O(1)</span></div>
+        <div class="method-row"><span class="method-name">q.empty()</span><span class="method-desc">True if empty</span><span class="method-note">O(1)</span></div>
+      </div>
+      <div class="methods-label" style="margin-top:0.75rem">DEQUE EXTRA METHODS</div>
+      <div class="methods-grid">
+        <div class="method-row"><span class="method-name">d.push_front(x)</span><span class="method-desc">Add to front</span><span class="method-note">O(1)</span></div>
+        <div class="method-row"><span class="method-name">d.push_back(x)</span><span class="method-desc">Add to back</span><span class="method-note">O(1)</span></div>
+        <div class="method-row"><span class="method-name">d.pop_front()</span><span class="method-desc">Remove from front</span><span class="method-note">O(1)</span></div>
+        <div class="method-row"><span class="method-name">d.pop_back()</span><span class="method-desc">Remove from back</span><span class="method-note">O(1)</span></div>
+        <div class="method-row"><span class="method-name">d[i]</span><span class="method-desc">Random access by index</span><span class="method-note">O(1)</span></div>
+        <div class="method-row"><span class="method-name">d.front()/back()</span><span class="method-desc">First/last element</span><span class="method-note">O(1)</span></div>
+      </div>
+      <div class="trap-banner">Queue pop() removes FRONT not back. front() = oldest element. back() = newest. Confused with stack? Stack: top() is newest. Queue: front() is oldest.</div>
+      <div class="sample-q">BFS level order traversal: push root, while queue not empty: pop front, process, push children.</div>
+      <div class="code-block">
+<span class="cm">// ── Queue basic ──</span>
+<span class="ty">queue</span>&lt;<span class="ty">int</span>&gt; q;
+q.<span class="fn">push</span>(<span class="nu">1</span>); q.<span class="fn">push</span>(<span class="nu">2</span>); q.<span class="fn">push</span>(<span class="nu">3</span>);
+cout &lt;&lt; q.<span class="fn">front</span>();   <span class="cm">// 1 (oldest)</span>
+cout &lt;&lt; q.<span class="fn">back</span>();    <span class="cm">// 3 (newest)</span>
+q.<span class="fn">pop</span>();             <span class="cm">// removes 1</span>
+cout &lt;&lt; q.<span class="fn">front</span>();   <span class="cm">// 2 now</span>
+
+<span class="cm">// ── Process queue ──</span>
+<span class="kw">while</span>(!q.<span class="fn">empty</span>()){
+  <span class="ty">int</span> val = q.<span class="fn">front</span>(); q.<span class="fn">pop</span>();
+  cout &lt;&lt; val &lt;&lt; <span class="st">" "</span>;
+}
+
+<span class="cm">// ── Deque ──</span>
+<span class="ty">deque</span>&lt;<span class="ty">int</span>&gt; d;
+d.<span class="fn">push_back</span>(<span class="nu">1</span>);   d.<span class="fn">push_front</span>(<span class="nu">0</span>);   <span class="cm">// {0,1}</span>
+d.<span class="fn">push_back</span>(<span class="nu">2</span>);                        <span class="cm">// {0,1,2}</span>
+d.<span class="fn">pop_front</span>();                          <span class="cm">// {1,2}</span>
+cout &lt;&lt; d[<span class="nu">0</span>];                           <span class="cm">// 1 — index works!</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ PRIORITY QUEUE -->
+<section class="stl-section" id="sec-pq">
+  <div class="section-heading">PRIORITY QUEUE</div>
+  <div class="section-desc">// #include &lt;queue&gt; — max-heap by default</div>
+  <div class="container-block">
+    <div class="container-header">
+      <div class="container-name">priority_queue&lt;T&gt;</div>
+      <div class="header-file">#include &lt;queue&gt;</div>
+      <div class="container-tagline">Heap — always gives you MAX element at top. For min-heap, use greater&lt;T&gt; comparator.</div>
+    </div>
+    <div class="container-body">
+      <div class="use-case-row">
+        <div class="info-box when"><div class="label blue">WHEN TO USE</div><p>Kth largest/smallest element. Always need max or min efficiently. Dijkstra's algorithm. Job scheduling.</p></div>
+        <div class="info-box trap"><div class="label red">TRAPS</div><p>DEFAULT is MAX-heap (largest on top). For min-heap syntax is long: priority_queue&lt;int,vector&lt;int&gt;,greater&lt;int&gt;&gt;. pop() is void!</p></div>
+      </div>
+      <div class="methods-label">METHODS (same as stack!)</div>
+      <div class="methods-grid">
+        <div class="method-row"><span class="method-name">pq.push(x)</span><span class="method-desc">Insert element</span><span class="method-note">O(logn)</span></div>
+        <div class="method-row"><span class="method-name">pq.pop()</span><span class="method-desc">Remove top element (void)</span><span class="method-note">O(logn)</span></div>
+        <div class="method-row"><span class="method-name">pq.top()</span><span class="method-desc">View max (or min) element</span><span class="method-note">O(1)</span></div>
+        <div class="method-row"><span class="method-name">pq.size()</span><span class="method-desc">Number of elements</span><span class="method-note">O(1)</span></div>
+        <div class="method-row"><span class="method-name">pq.empty()</span><span class="method-desc">True if empty</span><span class="method-note">O(1)</span></div>
+      </div>
+      <div class="trap-banner">Min-heap declaration is verbose: priority_queue&lt;int, vector&lt;int&gt;, greater&lt;int&gt;&gt; pq; — don't forget vector&lt;int&gt; in the middle!</div>
+      <div class="sample-q">Find Kth largest: push all elements, pop (n-k) times, top() is answer. OR: maintain min-heap of size k.</div>
+      <div class="code-block">
+<span class="cm">// ── Max heap (default) ──</span>
+<span class="ty">priority_queue</span>&lt;<span class="ty">int</span>&gt; maxpq;
+maxpq.<span class="fn">push</span>(<span class="nu">3</span>); maxpq.<span class="fn">push</span>(<span class="nu">1</span>); maxpq.<span class="fn">push</span>(<span class="nu">5</span>);
+cout &lt;&lt; maxpq.<span class="fn">top</span>();   <span class="cm">// 5 (MAX)</span>
+maxpq.<span class="fn">pop</span>();
+cout &lt;&lt; maxpq.<span class="fn">top</span>();   <span class="cm">// 3</span>
+
+<span class="cm">// ── Min heap ──</span>
+<span class="ty">priority_queue</span>&lt;<span class="ty">int</span>, <span class="ty">vector</span>&lt;<span class="ty">int</span>&gt;, <span class="fn">greater</span>&lt;<span class="ty">int</span>&gt;&gt; minpq;
+minpq.<span class="fn">push</span>(<span class="nu">3</span>); minpq.<span class="fn">push</span>(<span class="nu">1</span>); minpq.<span class="fn">push</span>(<span class="nu">5</span>);
+cout &lt;&lt; minpq.<span class="fn">top</span>();   <span class="cm">// 1 (MIN)</span>
+
+<span class="cm">// ── Kth largest element ──</span>
+<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; v = {<span class="nu">3</span>,<span class="nu">2</span>,<span class="nu">1</span>,<span class="nu">5</span>,<span class="nu">6</span>,<span class="nu">4</span>};
+<span class="ty">int</span> k = <span class="nu">2</span>;
+<span class="ty">priority_queue</span>&lt;<span class="ty">int</span>&gt; pq;
+<span class="kw">for</span>(<span class="ty">int</span> x : v) pq.<span class="fn">push</span>(x);
+<span class="kw">for</span>(<span class="ty">int</span> i=<span class="nu">0</span>; i&lt;k-<span class="nu">1</span>; i++) pq.<span class="fn">pop</span>();
+cout &lt;&lt; pq.<span class="fn">top</span>();   <span class="cm">// 5 (2nd largest)</span>
+
+<span class="cm">// ── Priority queue of pairs (sorted by first) ──</span>
+<span class="ty">priority_queue</span>&lt;<span class="ty">pair</span>&lt;<span class="ty">int</span>,<span class="ty">int</span>&gt;&gt; pqp;
+pqp.<span class="fn">push</span>({<span class="nu">3</span>,<span class="st">'a'</span>}); pqp.<span class="fn">push</span>({<span class="nu">1</span>,<span class="st">'b'</span>});
+cout &lt;&lt; pqp.<span class="fn">top</span>().first;   <span class="cm">// 3</span>
+      </div>
+      <div class="complexity-row">
+        <span class="complexity-tag Ologn">push O(logn)</span>
+        <span class="complexity-tag Ologn">pop O(logn)</span>
+        <span class="complexity-tag O1">top O(1)</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ ALGORITHMS -->
+<section class="stl-section" id="sec-algo">
+  <div class="section-heading">ALGORITHMS</div>
+  <div class="section-desc">// #include &lt;algorithm&gt; — sort, search, transform, and more</div>
+  <div class="container-block">
+    <div class="container-header">
+      <div class="container-name">&lt;algorithm&gt;</div>
+      <div class="header-file">#include &lt;algorithm&gt;</div>
+      <div class="container-tagline">Most powerful header. sort, reverse, binary_search, min, max, count, find, accumulate and more.</div>
+    </div>
+    <div class="container-body">
+      <div class="quick-ref" style="margin-bottom:0.75rem">
+        <div class="quick-ref-title">ALL KEY ALGORITHM FUNCTIONS</div>
+        <table>
+          <tr><th>Function</th><th>Usage</th><th>Returns</th><th>Complexity</th></tr>
+          <tr><td>sort(b,e)</td><td>sort(v.begin(),v.end())</td><td>void</td><td>O(nlogn)</td></tr>
+          <tr><td>sort(b,e,cmp)</td><td>sort(v.begin(),v.end(),greater&lt;int&gt;())</td><td>void — desc</td><td>O(nlogn)</td></tr>
+          <tr><td>reverse(b,e)</td><td>reverse(v.begin(),v.end())</td><td>void</td><td>O(n)</td></tr>
+          <tr><td>min(a,b)</td><td>min(3,5)</td><td>smaller value</td><td>O(1)</td></tr>
+          <tr><td>max(a,b)</td><td>max(3,5)</td><td>larger value</td><td>O(1)</td></tr>
+          <tr><td>min_element(b,e)</td><td>*min_element(v.begin(),v.end())</td><td>iterator</td><td>O(n)</td></tr>
+          <tr><td>max_element(b,e)</td><td>*max_element(v.begin(),v.end())</td><td>iterator</td><td>O(n)</td></tr>
+          <tr><td>find(b,e,x)</td><td>find(v.begin(),v.end(),5)</td><td>iterator/end</td><td>O(n)</td></tr>
+          <tr><td>count(b,e,x)</td><td>count(v.begin(),v.end(),3)</td><td>int count</td><td>O(n)</td></tr>
+          <tr><td>binary_search(b,e,x)</td><td>binary_search(v.begin(),v.end(),5)</td><td>bool (SORTED!)</td><td>O(logn)</td></tr>
+          <tr><td>lower_bound(b,e,x)</td><td>lower_bound(v.begin(),v.end(),5)</td><td>iter to first ≥x</td><td>O(logn)</td></tr>
+          <tr><td>upper_bound(b,e,x)</td><td>upper_bound(v.begin(),v.end(),5)</td><td>iter to first >x</td><td>O(logn)</td></tr>
+          <tr><td>accumulate(b,e,init)</td><td>accumulate(v.begin(),v.end(),0)</td><td>sum</td><td>O(n)</td></tr>
+          <tr><td>unique(b,e)</td><td>v.erase(unique(b,e),e)</td><td>new end iter</td><td>O(n) after sort</td></tr>
+          <tr><td>fill(b,e,x)</td><td>fill(v.begin(),v.end(),0)</td><td>void</td><td>O(n)</td></tr>
+          <tr><td>swap(a,b)</td><td>swap(x,y)</td><td>void</td><td>O(1)</td></tr>
+          <tr><td>abs(x)</td><td>abs(-5) → 5</td><td>absolute value</td><td>O(1)</td></tr>
+          <tr><td>__gcd(a,b)</td><td>__gcd(12,8) → 4</td><td>GCD</td><td>O(logn)</td></tr>
+          <tr><td>next_permutation(b,e)</td><td>next_permutation(v.begin(),v.end())</td><td>bool</td><td>O(n)</td></tr>
+        </table>
+      </div>
+      <div class="trap-banner">binary_search, lower_bound, upper_bound require SORTED array. Using on unsorted = wrong answers.</div>
+      <div class="trap-banner">accumulate needs &lt;numeric&gt; header, not just &lt;algorithm&gt;. Also: __gcd is GCC extension. Use std::gcd from &lt;numeric&gt; in C++17.</div>
+      <div class="sample-q">Custom sort by string length: sort(v.begin(),v.end(),[](string a,string b){return a.size()&lt;b.size();});</div>
+      <div class="code-block">
+<span class="cm">// ── Sort variations ──</span>
+<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; v = {<span class="nu">5</span>,<span class="nu">2</span>,<span class="nu">8</span>,<span class="nu">1</span>,<span class="nu">9</span>};
+<span class="fn">sort</span>(v.<span class="fn">begin</span>(), v.<span class="fn">end</span>());                    <span class="cm">// ascending</span>
+<span class="fn">sort</span>(v.<span class="fn">begin</span>(), v.<span class="fn">end</span>(), <span class="fn">greater</span>&lt;<span class="ty">int</span>&gt;());    <span class="cm">// descending</span>
+
+<span class="cm">// Custom comparator (lambda)</span>
+<span class="fn">sort</span>(v.<span class="fn">begin</span>(), v.<span class="fn">end</span>(), [](<span class="ty">int</span> a, <span class="ty">int</span> b){
+  <span class="kw">return</span> a % <span class="nu">2</span> &lt; b % <span class="nu">2</span>;  <span class="cm">// evens first</span>
+});
+
+<span class="cm">// ── Binary search (SORTED array only) ──</span>
+<span class="fn">sort</span>(v.<span class="fn">begin</span>(), v.<span class="fn">end</span>());
+<span class="kw">bool</span> found = <span class="fn">binary_search</span>(v.<span class="fn">begin</span>(), v.<span class="fn">end</span>(), <span class="nu">8</span>); <span class="cm">// true</span>
+
+<span class="ty">auto</span> it = <span class="fn">lower_bound</span>(v.<span class="fn">begin</span>(), v.<span class="fn">end</span>(), <span class="nu">8</span>);
+cout &lt;&lt; *it;           <span class="cm">// 8 (first ≥ 8)</span>
+cout &lt;&lt; it - v.<span class="fn">begin</span>(); <span class="cm">// index of 8</span>
+
+<span class="cm">// ── Sum of vector ──</span>
+<span class="ty">int</span> sum = <span class="fn">accumulate</span>(v.<span class="fn">begin</span>(), v.<span class="fn">end</span>(), <span class="nu">0</span>);
+
+<span class="cm">// ── Count occurrences ──</span>
+<span class="ty">int</span> cnt = <span class="fn">count</span>(v.<span class="fn">begin</span>(), v.<span class="fn">end</span>(), <span class="nu">5</span>);
+
+<span class="cm">// ── All permutations ──</span>
+<span class="ty">vector</span>&lt;<span class="ty">int</span>&gt; p = {<span class="nu">1</span>,<span class="nu">2</span>,<span class="nu">3</span>};
+<span class="kw">do</span> {
+  <span class="kw">for</span>(<span class="ty">int</span> x : p) cout &lt;&lt; x; cout &lt;&lt; <span class="st">"\n"</span>;
+} <span class="kw">while</span>(<span class="fn">next_permutation</span>(p.<span class="fn">begin</span>(), p.<span class="fn">end</span>()));
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ UNORDERED -->
+<section class="stl-section" id="sec-unordered">
+  <div class="section-heading">UNORDERED MAP/SET</div>
+  <div class="section-desc">// #include &lt;unordered_map&gt; / #include &lt;unordered_set&gt; — O(1) average</div>
+  <div class="container-block">
+    <div class="container-header">
+      <div class="container-name">unordered_map / unordered_set</div>
+      <div class="header-file">#include &lt;unordered_map&gt; / &lt;unordered_set&gt;</div>
+      <div class="container-tagline">Hash table — O(1) average insert/find. NOT sorted. Faster than map/set for large inputs.</div>
+    </div>
+    <div class="container-body">
+      <div class="use-case-row">
+        <div class="info-box when"><div class="label blue">WHEN TO USE</div><p>When you need map/set but DON'T need sorted order. Faster O(1) vs O(logn) for large n. Freq count where order doesn't matter.</p></div>
+        <div class="info-box trap"><div class="label red">TRAPS</div><p>Worst case O(n) per op (hash collision). No ordered iteration. lower_bound/upper_bound NOT available. Output order unpredictable.</p></div>
+      </div>
+      <div class="quick-ref" style="margin-bottom:0.75rem">
+        <div class="quick-ref-title">MAP vs UNORDERED_MAP</div>
+        <table>
+          <tr><th>Feature</th><th>map</th><th>unordered_map</th></tr>
+          <tr><td>Insert/Find</td><td>O(logn)</td><td>O(1) avg</td></tr>
+          <tr><td>Sorted iteration</td><td>✅ Yes</td><td>❌ No</td></tr>
+          <tr><td>lower/upper_bound</td><td>✅ Yes</td><td>❌ No</td></tr>
+          <tr><td>Memory</td><td>Less</td><td>More</td></tr>
+          <tr><td>Use when</td><td>Need sorted keys</td><td>Just need fast lookup</td></tr>
+        </table>
+      </div>
+      <div class="code-block">
+<span class="cm">// Same interface as map/set — just faster!</span>
+<span class="ty">unordered_map</span>&lt;<span class="ty">string</span>, <span class="ty">int</span>&gt; um;
+um[<span class="st">"apple"</span>]++;
+um[<span class="st">"banana"</span>] = <span class="nu">5</span>;
+<span class="kw">if</span>(um.<span class="fn">count</span>(<span class="st">"apple"</span>)) cout &lt;&lt; um[<span class="st">"apple"</span>];
+
+<span class="ty">unordered_set</span>&lt;<span class="ty">int</span>&gt; us;
+us.<span class="fn">insert</span>(<span class="nu">1</span>); us.<span class="fn">insert</span>(<span class="nu">2</span>); us.<span class="fn">insert</span>(<span class="nu">1</span>);  <span class="cm">// {1,2}</span>
+<span class="kw">if</span>(us.<span class="fn">count</span>(<span class="nu">1</span>)) cout &lt;&lt; <span class="st">"exists"</span>;
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ PAIRS -->
+<section class="stl-section" id="sec-pairs">
+  <div class="section-heading">PAIR / TUPLE</div>
+  <div class="section-desc">// #include &lt;utility&gt; (pair) / #include &lt;tuple&gt;</div>
+  <div class="container-block">
+    <div class="container-header">
+      <div class="container-name">pair&lt;T1,T2&gt; / tuple&lt;T1,T2,T3&gt;</div>
+      <div class="header-file">#include &lt;utility&gt; / #include &lt;tuple&gt;</div>
+      <div class="container-tagline">Bundle 2 or more values together. Pair is most common in competitive programming.</div>
+    </div>
+    <div class="container-body">
+      <div class="methods-label">PAIR METHODS</div>
+      <div class="methods-grid">
+        <div class="method-row"><span class="method-name">p.first</span><span class="method-desc">First element</span><span class="method-note">—</span></div>
+        <div class="method-row"><span class="method-name">p.second</span><span class="method-desc">Second element</span><span class="method-note">—</span></div>
+        <div class="method-row"><span class="method-name">make_pair(a,b)</span><span class="method-desc">Create pair</span><span class="method-note">—</span></div>
+        <div class="method-row"><span class="method-name">{a,b}</span><span class="method-desc">Shorthand for make_pair</span><span class="method-note">C++11</span></div>
+        <div class="method-row"><span class="method-name">get&lt;0&gt;(t)</span><span class="method-desc">First of tuple</span><span class="method-note">—</span></div>
+        <div class="method-row"><span class="method-name">get&lt;1&gt;(t)</span><span class="method-desc">Second of tuple</span><span class="method-note">—</span></div>
+      </div>
+      <div class="trap-banner">Pairs compare by .first first, then .second. Sorting vector of pairs sorts by first element automatically.</div>
+      <div class="sample-q">Store (frequency, element) pairs and sort to find top k frequent: vector&lt;pair&lt;int,int&gt;&gt; sorted by first descending.</div>
+      <div class="code-block">
+<span class="cm">// ── Pair ──</span>
+<span class="ty">pair</span>&lt;<span class="ty">int</span>,<span class="ty">string</span>&gt; p = {<span class="nu">1</span>, <span class="st">"hello"</span>};
+cout &lt;&lt; p.first &lt;&lt; <span class="st">" "</span> &lt;&lt; p.second;
+
+<span class="cm">// ── Vector of pairs ──</span>
+<span class="ty">vector</span>&lt;<span class="ty">pair</span>&lt;<span class="ty">int</span>,<span class="ty">int</span>&gt;&gt; vp;
+vp.<span class="fn">push_back</span>({<span class="nu">3</span>,<span class="nu">1</span>}); vp.<span class="fn">push_back</span>({<span class="nu">1</span>,<span class="nu">5</span>});
+<span class="fn">sort</span>(vp.<span class="fn">begin</span>(), vp.<span class="fn">end</span>());  <span class="cm">// sorts by .first, then .second</span>
+
+<span class="cm">// ── Map to frequency pairs ──</span>
+<span class="ty">map</span>&lt;<span class="ty">int</span>,<span class="ty">int</span>&gt; freq;
+<span class="kw">for</span>(<span class="ty">int</span> x : v) freq[x]++;
+<span class="ty">vector</span>&lt;<span class="ty">pair</span>&lt;<span class="ty">int</span>,<span class="ty">int</span>&gt;&gt; fv(freq.<span class="fn">begin</span>(), freq.<span class="fn">end</span>());
+<span class="fn">sort</span>(fv.<span class="fn">begin</span>(), fv.<span class="fn">end</span>(), [](<span class="kw">auto</span> a, <span class="kw">auto</span> b){
+  <span class="kw">return</span> a.second &gt; b.second;  <span class="cm">// sort by freq desc</span>
+});
+
+<span class="cm">// ── Tuple ──</span>
+<span class="ty">tuple</span>&lt;<span class="ty">int</span>,<span class="ty">string</span>,<span class="ty">double</span>&gt; t = {<span class="nu">1</span>, <span class="st">"hi"</span>, <span class="nu">3.14</span>};
+cout &lt;&lt; <span class="fn">get</span>&lt;<span class="nu">0</span>&gt;(t) &lt;&lt; <span class="st">" "</span> &lt;&lt; <span class="fn">get</span>&lt;<span class="nu">1</span>&gt;(t);
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<script>
+function showSection(id, btn){
+  document.querySelectorAll('.stl-section').forEach(s=>s.classList.remove('visible'));
+  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('visible');
+  btn.classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+</script>
+</body>
+</html>
